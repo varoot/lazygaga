@@ -13,9 +13,9 @@ if [ ! -d /home/vagrant/meteorapp ]; then
 	curl https://install.meteor.com | sudo sh
 	sudo npm install -g meteorite
 	cd /vagrant
-	mrt create ~/meteorapp
-	mrt create meteorapp
-	cd meteorapp && rm -rf .meteor && mkdir .meteor/
+	mrt create /home/vagrant/meteorapp
+	cd meteorapp
+	rm -rf .meteor && mkdir .meteor/
 	sudo mount --bind /home/vagrant/meteorapp/.meteor/ /vagrant/meteorapp/.meteor/
 	echo "sudo mount --bind /home/vagrant/meteorapp/.meteor/ /vagrant/meteorapp/.meteor/" >> ~/.bashrc && source ~/.bashrc
 fi
