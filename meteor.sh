@@ -17,8 +17,8 @@ if [ ! -d /home/vagrant/meteorapp ]; then
 	mrt create meteorapp && cd meteorapp && rm -rf .meteor && mkdir .meteor/
 	sudo mount --bind /home/vagrant/meteorapp/.meteor/ /vagrant/meteorapp/.meteor/
 	echo "sudo mount --bind /home/vagrant/meteorapp/.meteor/ /vagrant/meteorapp/.meteor/" >> ~/.bashrc && source ~/.bashrc
-	mrt run
 fi
 
 cd /home/vagrant/meteorapp
+mrt run
 su vagrant -c 'meteor add coffeescript less bootstrap'
