@@ -10,5 +10,10 @@ Baseline Requirements
 
 Getting Started
 ---------------
+1. Run:
+	vagrant up
+when start developing
 
-Follow [this instruction for setting up Meteor in Windows using Vagrant](https://gist.github.com/gabrielhpugliese/5855677)
+2. Run:
+	vagrant suspend
+when done
