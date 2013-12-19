@@ -3,10 +3,10 @@ if Meteor.isClient
     "Welcome to Lazy GAGA."
 
   Template.hello.events =
-    'click input' : ->
+    'click input' : (e)->
       # template data, if any, is available in 'this'
-      if typeof console isnt 'undefined'
-        console.log "You pressed the button"
+      e.preventDefault()
+      alert "You pressed the button"
 
 if Meteor.isServer
   Meteor.startup ->

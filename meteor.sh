@@ -14,11 +14,12 @@ if [ ! -d /home/vagrant/meteorapp ]; then
 	sudo npm install -g meteorite
 	cd /vagrant
 	mrt create ~/meteorapp
-	mrt create meteorapp && cd meteorapp && rm -rf .meteor && mkdir .meteor/
+	mrt create meteorapp
+	cd meteorapp && rm -rf .meteor && mkdir .meteor/
 	sudo mount --bind /home/vagrant/meteorapp/.meteor/ /vagrant/meteorapp/.meteor/
 	echo "sudo mount --bind /home/vagrant/meteorapp/.meteor/ /vagrant/meteorapp/.meteor/" >> ~/.bashrc && source ~/.bashrc
 fi
 
-cd /home/vagrant/meteorapp
+cd /vagrant/meteorapp
+meteor add coffeescript less bootstrap
 mrt run
-su vagrant -c 'meteor add coffeescript less bootstrap'
