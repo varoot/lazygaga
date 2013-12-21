@@ -1,8 +1,9 @@
 var fs = require('fs');
 
-function binPacking(people, housing, transportation) {
-	console.log('hi')
-	return input;
+
+function binPacking(people) {
+	console.log(people)
+	return;
 }
 
 fs.readFile('undergrad-retreat.json', function (err, data) {
@@ -10,5 +11,3 @@ fs.readFile('undergrad-retreat.json', function (err, data) {
 	var data = JSON.parse(data);
 	binPacking(data);
 });
-
-
