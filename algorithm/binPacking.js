@@ -1,7 +1,8 @@
 var fs = require('fs');
 
 // Hong Yoon
-function Location() {
+function Location(name) {
+	this.name = name;
 	this.supply = 0;
 	this.demand = 0;
 	this.bins = [];
@@ -9,11 +10,23 @@ function Location() {
 	this.groups = {};
 }
 
+Location.prototype.print = function() {
+	console.log(this.name);
+	console.log('Demand: ', this.demand);
+	console.log('Supply: ', this.supply);
+	console.log('\n');
+	console.log('Potential Bins: ');
+	console.log(this.potentialBins);
+	console.log('\n');
+	console.log('Groups: ');
+	console.log(this.groups);
+	console.log('\n');
+}
+
 // Hong Yoon - complete
 Location.prototype.addBin = function(bin) {
 	this.bins.push(bin);
 	this.supply += bin.supply;
-	this.demand += bin.demand;
 
 	return this;
 }
@@ -34,6 +47,8 @@ Location.prototype.addItem = function(item) {
 // Hong Yoon - complete
 Location.prototype.addPotentialBin = function(item) {
 	this.potentialBins.addItem(item);
+	this.demand += item.demand;
+	this.supply += item.supply;
 
 	return this;
 }
@@ -42,6 +57,8 @@ Location.prototype.addPotentialBin = function(item) {
 Location.prototype.removePotentialBin = function(item) {
 	if (this.potentialBins.removeItem(item)) {
 		return item;
+		this.demand -= item.demand;
+		this.supply -= item.supply;
 	} else {
 		return false;
 	}
@@ -58,7 +75,8 @@ Location.prototype.potentialBinToItem = function(item) {
 
 // Hong Yoon
 Location.prototype.pullPotentialBin = function(source, demand) {
-	if (var newBinsFromSource = source.pushPotentialBin(demand)) {
+	var newBinsFromSource;
+	if (newBinsFromSource = source.pushPotentialBin(demand)) {
 		newBinsFromSource.forEach(bins)
 
 	} else {
@@ -74,12 +92,10 @@ Location.prototype.pushPotentialBin = function(demand) {
 
 // Varoot
 Location.prototype.findLargestGroup = function() {
-	var max = 0;
 	var maxGroup;
-	for (group in items[location]) {
-		if (items[location][group].length > max) {
-			max = items[location][group].length;
-			maxGroup = group;
+	for (group in this.groups) {
+		if (maxGroup == undefined || this.groups[group].demand > maxGroup.demand) {
+			maxGroup = this.groups[group];
 		}
 	}
 
@@ -88,13 +104,10 @@ Location.prototype.findLargestGroup = function() {
 
 // Varoot
 Location.prototype.findLargestBin = function() {
-	var max = 0;
 	var maxBin;
-	for (bin in bins[location]) {
-		var available = bins[location][bin].capacity - bins[location][bin].passengers.length;
-		if (available > max) {
-			max = available;
-			maxBin = bin;
+	for (var i=0; i < this.bins.length; i++) {
+		if (maxBin == undefined || this.bins[i].supply > maxBin.supply) {
+			maxBin = this.bins[i];
 		}
 	}
 
@@ -103,12 +116,26 @@ Location.prototype.findLargestBin = function() {
 
 // Varoot
 Location.prototype.packBins = function() {
-	return ;
+	while (true) {
+		var group = this.findLargestGroup();
+		var bin = this.findLargestBin();
+
+		if (group == undefined || bin == undefined || group.demand == 0 || bin.supply == 0)
+			break;
+
+		var count = Math.min(group.demand, bin.supply);
+		for (var i=0; i < count; i++) {
+			var item;
+			if (item = group.popItem()) {
+				bin.addItem(item);
+			}
+		}
+	}
 }
 
 // Varoot - complete
 function Item(entry) {
-	this.data = {};
+	this.data = entry;
 	this.demand = 1;
 	this.supply = this.capacity();
 	this.parent = null;
@@ -126,6 +153,10 @@ Item.prototype.print = function(quiet) {
 	}
 
 	return printout;
+}
+
+Item.prototype.inspect = function() {
+	return this.print(true);
 }
 
 Item.prototype.capacity = function() {
@@ -167,8 +198,20 @@ Group.prototype.addItem = function(item) {
 	return this;
 }
 
+Group.prototype.popItem = function() {
+	if (this.items.length == 0)
+		return false;
+
+	item = this.items.pop();
+	this.supply -= item.supply;
+	this.demand -= item.demand;
+	item.parent = null;
+	return item;
+}
+
 Group.prototype.removeItem = function(item) {
-	if (var index = this.items.indexOf(item)) {
+	var index;
+	if (index = this.items.indexOf(item)) {
 		this.supply -= item.supply;
 		this.demand -= item.demand;
 		this.items.splice(index, 1);
@@ -209,14 +252,14 @@ Bin.prototype.removeItem = function(item) {
 }
 
 locations = {};
-volunteers = new Location();
+volunteers = new Location('Volunteers');
 noItems = [];
 
 function getLocation(entry) {
 	var loc = entry.transportation;
 	
 	if (locations[loc] == undefined) {
-		locations[loc] = new Location();
+		locations[loc] = new Location(loc);
 	}
 
 	return locations[loc]
@@ -226,13 +269,12 @@ function partitionData(data) {
 	var length = data.length;
 
 	for (var i=1; i<length; i++) {
-		var location = getLocation(data[i]);
 		var item = new Item(data[i]);
 
 		if (data[i].role == '') {
-			location.addItem(item);
+			getLocation(data[i]).addItem(item);
 		} else if (data[i].role == 'D') {
-			location.addPotentialBin(item);
+			getLocation(data[i]).addPotentialBin(item);
 		} else if (data[i].role == 'V') {
 			volunteers.addPotentialBin(item);
 		} else {
@@ -241,6 +283,19 @@ function partitionData(data) {
 	}
 
 	return true;
+}
+
+function prepareBins() {
+	var busData = { capacity: 45 };
+	locations['Bursley'].addBin(new Bin(busData));
+	locations['Cube'].addBin(new Bin(busData));
+	locations['Stockwell'].addBin(new Bin(busData)).addBin(new Bin(busData));
+
+	delete locations['Late'];
+}
+
+function distributeAllLocations() {
+
 }
 
 fs.readFile('undergrad-retreat.json', function (err, peopleData) {
@@ -260,13 +315,8 @@ fs.readFile('undergrad-retreat.json', function (err, peopleData) {
 	distributeAllLocations();
 
 	// STEP 4: Print out result
-	for (location in bins) {
-		console.log('\n\n'+location+'\n');
-		for (bin in bins[location]) {
-			printBin(bins[location][bin]);
-		}
-
-		printLefoverItems(items[location]);
+	for (loc in locations) {
+		locations[loc].print();
 	}
 });
 
