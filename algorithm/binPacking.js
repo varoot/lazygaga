@@ -53,6 +53,35 @@ Location.prototype.pushPotentialBin = function(demand) {
 }
 
 // Varoot
+Location.prototype.findLargestGroup = function() {
+	var max = 0;
+	var maxGroup;
+	for (group in items[location]) {
+		if (items[location][group].length > max) {
+			max = items[location][group].length;
+			maxGroup = group;
+		}
+	}
+
+	return maxGroup;
+}
+
+// Varoot
+Location.prototype.findLargestBin = function() {
+	var max = 0;
+	var maxBin;
+	for (bin in bins[location]) {
+		var available = bins[location][bin].capacity - bins[location][bin].passengers.length;
+		if (available > max) {
+			max = available;
+			maxBin = bin;
+		}
+	}
+
+	return maxBin;
+}
+
+// Varoot
 Location.prototype.packBins = function() {
 	return ;
 }
@@ -72,6 +101,45 @@ Item.prototype.capacity = function() {
 		return (this.data.capacity ? +this.data.capacity : 5);
 	}
 	return 0;
+}
+
+function Group() {
+	this.demand = 0;
+	this.items = [];
+}
+
+Group.prototype.addItem = function(item) {
+	this.demand++;
+	this.items.push(item);
+
+	return this;
+}
+
+Group.prototype.removeItem = function(item) {
+	if (var index = this.items.indexOf(item)) {
+		this.demand--;
+		this.items.splice(index, 1);
+	}
+
+	return this;
+}
+
+function Bin(options) {
+	this.name = options.name;
+	this.owner = options.owner;
+	this.items = [];
+	this.supply = options.capacity;
+}
+
+Bin.prototype.addItem = function(item) {
+	this.items.push(item);
+	this.supply--;
+}
+
+Bin.prototype.removeItem = function(item) {
+	var index = this.items.indexOf(item);
+	this.supply++;
+	return this.items.splice(index, 1);
 }
 
 locations = {};
