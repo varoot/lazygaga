@@ -49,8 +49,8 @@ Location.prototype.potentialBinToItem = function(item) {
 }
 
 // Hong Yoon
-Location.prototype.pullPotentialBin = function(source, demand) {
-	if (var newBinsFromSource = source.pushPotentialBin(demand)) {
+Location.prototype.pullPotentialBin = function(source, requiredDemand) {
+	if (var potentialbinsFromSource = source.pushPotentialBin(requiredDemand)) {
 		newBinsFromSource.forEach(bins)
 
 	} else {
@@ -59,8 +59,26 @@ Location.prototype.pullPotentialBin = function(source, demand) {
 }
 
 // Hong Yoon
-Location.prototype.pushPotentialBin = function(demand) {
-	var bins;
+Location.prototype.pushPotentialBins = function(requestedDemand) {
+	var bins = [];
+	if (location.supply > location.demand){
+		while (requestedDemand > 0) {
+		var index = this.potentialBins.items.length -1;
+		var pushedPotentialBin = this.potentialBins.items[index];
+		if ((location.supply - pushedPotentialBin.supply) > (location.demand - pushedPotentialBin.demand)) {
+			bins.push(pushedPotentialBin.remove());
+			requestedDemand -= pushedPotentialBin.supply;
+		}
+		else {
+			return bins;
+		}
+		else
+			return bins;
+	}
+
+	}
+	
+
 	return bins;
 }
 
