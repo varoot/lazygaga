@@ -9,37 +9,49 @@ function Location() {
 	this.items = {};
 }
 
-// Hong Yoon
+// Hong Yoon - complete
 Location.prototype.addBin = function(bin) {
 	this.bins.push(bin);
 	this.supply += bin.supply;
 	this.demand += bin.demand;
+
+	return this;
 }
 
-// Hong Yoon
+// Hong Yoon - complete
 Location.prototype.addItem = function(item) {
+	this.items.push(item);
 	this.demand += item.demand;
-	this.supply += item.supply;
+
+	return this;
 }
 
-// Hong Yoon
+// Hong Yoon - complete
 Location.prototype.addPotentialBin = function(item) {
+	this.potentialBins.push(item);
+	this.supply += item.supply;
+	this.demand += item.demand;
 
+	return this;
 }
 
-// Hong Yoon
+// Hong Yoon - complete
 Location.prototype.removePotentialBin = function(item) {
-
+	var index = this.potentialBins.indexOf(item);
+	this.supply -= item.supply;
+	this.demand -= item.demand;
+	return this.potentialBins.splice(index, 1);
 }
 
-// Hong Yoon
+// Hong Yoon - complete
 Location.prototype.potentialBinToItem = function(item) {
 	return this.addItem(this.removePotentialBin(item));
 }
 
 // Hong Yoon
 Location.prototype.pullPotentialBin = function(source, demand) {
-	if (var bins = source.pushPotentialBin(demand)) {
+	if (var newBinsFromSource = source.pushPotentialBin(demand)) {
+		newBinsFromSource.forEach(bins)
 
 	} else {
 		return false;
