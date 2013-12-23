@@ -79,8 +79,9 @@ function findLargestBin(location) {
 	var max = 0;
 	var maxBin;
 	for (bin in bins[location]) {
-		if (bins[location][bin].capacity > max) {
-			max = bins[location][bin].capacity;
+		var available = bins[location][bin].capacity - bins[location][bin].passengers.length;
+		if (available > max) {
+			max = available;
 			maxBin = bin;
 		}
 	}
@@ -89,9 +90,32 @@ function findLargestBin(location) {
 }
 
 function moveItemsToBin(location, item, bin) {
-	var count = Math.min(items[location][item].length, bins[location][bin].capacity);
-	console.log('Moving '+count+' items');
-	bins[location][bin].passengers = bins[location][bin].passengers.concat(items[location][item].splice(0,count));
+	var theItem = items[location][item];
+	var theBin = bins[location][bin];
+	var count = Math.min(theItem.length, theBin.capacity - theBin.passengers.length);
+
+	theBin.passengers = theBin.passengers.concat(theItem.splice(0,count));
+}
+
+function distributeItems(location) {
+	while (true) {
+		var item = findLargestItem(location);
+		var bin = findLargestBin(location);
+
+		if (item == undefined || bin == undefined)
+			break;
+
+		if (items[location][item].length == 0 || bins[location][bin].passengers.length >= bins[location][bin].capacity)
+			break;
+
+		moveItemsToBin(location, item, bin);
+	}
+}
+
+function distributeAllLocations() {
+	for (location in bins) {
+		distributeItems(location);
+	}
 }
 
 // console.log('\n\nItems\n');
@@ -100,8 +124,8 @@ function moveItemsToBin(location, item, bin) {
 // console.log('\n\nBins\n');
 // console.log(bins);
 
-console.log(findLargestItem('Location 2'));
-console.log(findLargestBin('Location 2'));
-
-moveItemsToBin('Location 2', findLargestItem('Location 2'), findLargestBin('Location 2'));
-console.log(bins);
+distributeAllLocations();
+for (location in bins) {
+	console.log('\n\n'+location+'\n');
+	console.log(bins[location]);
+}
