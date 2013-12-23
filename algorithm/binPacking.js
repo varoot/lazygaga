@@ -1,7 +1,29 @@
 var fs = require('fs');
 
 items = {};
-bins = {};
+bins = {
+	'Bursley': [
+		{
+			driver: { name: 'Bus #1' },
+			capacity: 45,
+			passengers: []
+		}
+	],
+	'Cube': [
+		{
+			driver: { name: 'Bus #2' },
+			capacity: 45,
+			passengers: []
+		}
+	],
+	'Stockwell': [
+		{
+			driver: { name: 'Bus #3' },
+			capacity: 45,
+			passengers: []
+		}
+	]
+};
 noItems = [];
 
 
@@ -65,12 +87,82 @@ function partitionData(data) {
 	}
 }
 
+function findLargestItem(location) {
+	var max = 0;
+	var maxGroup;
+	for (group in items[location]) {
+		if (items[location][group].length > max) {
+			max = items[location][group].length;
+			maxGroup = group;
+		}
+	}
+
+	return maxGroup;
+}
+
+function findLargestBin(location) {
+	var max = 0;
+	var maxBin;
+	for (bin in bins[location]) {
+		var available = bins[location][bin].capacity - bins[location][bin].passengers.length;
+		if (available > max) {
+			max = available;
+			maxBin = bin;
+		}
+	}
+
+	return maxBin;
+}
+
+function moveItemsToBin(location, item, bin) {
+	var theItem = items[location][item];
+	var theBin = bins[location][bin];
+	var count = Math.min(theItem.length, theBin.capacity - theBin.passengers.length);
+
+	theBin.passengers = theBin.passengers.concat(theItem.splice(0,count));
+}
+
+function distributeItems(location) {
+	while (true) {
+		var item = findLargestItem(location);
+		var bin = findLargestBin(location);
+
+		if (item == undefined || bin == undefined)
+			break;
+
+		if (items[location][item].length == 0 || bins[location][bin].passengers.length >= bins[location][bin].capacity)
+			break;
+
+		moveItemsToBin(location, item, bin);
+	}
+}
+
+function distributeAllLocations() {
+	for (location in bins) {
+		distributeItems(location);
+	}
+}
+
+function printBin(bin) {
+	console.log('('+bin.driver.lifegroup + ') ' + bin.driver.name);
+	for (var i=0; i < bin.passengers.length; i++) {
+		console.log(' - ('+bin.passengers[i].lifegroup + ') ' + bin.passengers[i].name);
+	}
+	console.log();
+}
+
 fs.readFile('undergrad-retreat.json', function (err, peopleData) {
 	if (err) { throw err; }
 	var peopleData = JSON.parse(peopleData);
 	partitionData(peopleData);
 	// console.log(items['Bursley']['Snapback']);
-	console.log(bins['Bursley']);
+	distributeAllLocations();
+	for (location in bins) {
+		console.log('\n\n'+location+'\n');
+		for (bin in bins[location]) {
+			printBin(bins[location][bin]);
+		}
+	}
 });
 
 // var variableDynamic = 'Test';
