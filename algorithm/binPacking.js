@@ -36,9 +36,19 @@ function allocateBin(entry){
 	if (bins[location] == undefined){
 		bins[location] = [];
 	}
-	bins[location].push(entry)
+
+	var bin = createBin(entry);
+	bins[location].push(bin);
 }
 
+function createBin(entry, capacityValue){
+	var name = entry.name;
+	if (capacityValue == undefined){
+		capacityValue = 4;
+	}
+	var capacity = 4;
+	return bin={driver:entry,capacity:capacityValue,passengers:[]};
+}
 
 function partitionData(data) {
 	var length = data.length;
