@@ -11,12 +11,19 @@ function Location(name) {
 }
 
 Location.prototype.print = function() {
-	console.log(this.name);
-	console.log('Demand: ', this.demand);
-	console.log('Supply: ', this.supply);
-	console.log('\n');
-	console.log('Bins: ');
-	console.log(this.bins);
+	console.log(Array(61).join("="));
+	console.log(this.name, ' ('+this.demand+'/'+this.supply+')');
+	console.log(Array(61).join("="));
+	for (var i=0; i < this.bins.length; i++) {
+		this.bins[i].print();
+	}
+
+	if (this.potentialBins.supply > 0) {
+		console.log('Unused Bins');
+		for (var i=0; i < this.potentialBins.items.length; i++) {
+			console.log(' - '+this.potentialBins.items[i].print(true));
+		}
+	}
 	console.log('\n');
 }
 
@@ -288,7 +295,31 @@ function Bin(options) {
 	}
 
 	this.items = [];
-	this.supply = options.capacity;
+	this.supply = this.capacity =options.capacity;
+}
+
+Bin.prototype.print = function(quiet) {
+	var printout;
+
+	if (this.owner) {
+		printout = this.owner.print(true);
+	} else {
+		printout = this.name;
+	}
+
+	printout += ' ('+this.items.length+'/'+this.capacity+')\n';
+
+	for (var i=0; i < this.items.length; i++) {
+		printout += ' - ';
+		printout += this.items[i].print(true);
+		printout += '\n';
+	}
+
+	if (!quiet) {
+		console.log(printout);
+	}
+
+	return printout;
 }
 
 Bin.prototype.addItem = function(item) {
@@ -354,7 +385,7 @@ function partitionData(data) {
 }
 
 function prepareBins() {
-	var busData = { capacity: 45 };
+	var busData = { capacity: 45, name: 'Bus' };
 	locations['Bursley'].addBin(new Bin(busData));
 	locations['Cube'].addBin(new Bin(busData));
 	locations['Stockwell'].addBin(new Bin(busData)).addBin(new Bin(busData));
