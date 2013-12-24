@@ -381,7 +381,17 @@ function partitionData(data) {
 		}
 	}
 
-	return true;
+	// Calculate total demand & supply
+	var totalDemand = 0;
+	var totalSupply = 0;
+	for (loc in locations) {
+		totalDemand += locations[loc].demand;
+		totalSupply += locations[loc].supply;
+	}
+
+	totalDemand += volunteers.demand;
+	totalSupply += volunteers.supply;
+	return (totalSupply >= totalDemand);
 }
 
 function prepareBins() {
@@ -395,21 +405,28 @@ function prepareBins() {
 	// Needs more bins
 	for (loc in locations) {
 		var location = locations[loc];
-		if (location.supply < location.demand) {
-			for (source in locations) {
-				if (source == loc)
-					continue;
 
-				location.pullPotentialBins(locations[source], location.demand - location.supply);
-				if (location.demand - location.supply <= 0)
-					break;
-			}
+		// Skip if this location has enough supply
+		if (location.supply >= location.demand)
+			continue;
+
+		// Asking other locations for supply
+		for (source in locations) {
+			if (source == loc)
+				continue;
+
+			location.pullPotentialBins(locations[source], location.demand - location.supply);
+			
+			// Stop when demand is met
+			if (location.supply >= location.demand)
+				break;
 		}
 
+		if (location.supply >= location.demand)
+			break;
+		
 		// Pull from volunteers if still not enough
-		if (location.supply < location.demand) {
-			location.pullPotentialBins(volunteers, location.demand - location.supply);
-		}
+		location.pullPotentialBins(volunteers, location.demand - location.supply);
 	}
 
 	// Extra bins--turn to item
