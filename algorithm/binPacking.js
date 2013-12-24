@@ -15,11 +15,8 @@ Location.prototype.print = function() {
 	console.log('Demand: ', this.demand);
 	console.log('Supply: ', this.supply);
 	console.log('\n');
-	console.log('Potential Bins: ');
-	console.log(this.potentialBins);
-	console.log('\n');
-	console.log('Groups: ');
-	console.log(this.groups);
+	console.log('Bins: ');
+	console.log(this.bins);
 	console.log('\n');
 }
 
@@ -56,9 +53,18 @@ Location.prototype.addPotentialBin = function(item) {
 // Hong Yoon - complete
 Location.prototype.removePotentialBin = function(item) {
 	if (this.potentialBins.removeItem(item)) {
-		return item;
 		this.demand -= item.demand;
 		this.supply -= item.supply;
+		return item;
+	} else {
+		return false;
+	}
+}
+
+// Hong Yoon - complete
+Location.prototype.potentialBinToBin = function(item) {
+	if (this.removePotentialBin(item)) {
+		return this.addBin(item.makeBin());
 	} else {
 		return false;
 	}
@@ -74,19 +80,33 @@ Location.prototype.potentialBinToItem = function(item) {
 }
 
 // Hong Yoon
-Location.prototype.pullPotentialBin = function(source, demand) {
-	var newBinsFromSource;
-	if (newBinsFromSource = source.pushPotentialBin(demand)) {
-		newBinsFromSource.forEach(bins)
-
+Location.prototype.pullPotentialBins = function(source, requiredDemand) {
+	var newBins;
+	if ((newBins = source.pushPotentialBins(requiredDemand)) && newBins.length > 0) {
+		for (var i=0; i < newBins.length; i++) {
+			this.addPotentialBin(newBins[i]);
+		}
 	} else {
 		return false;
 	}
 }
 
 // Hong Yoon
-Location.prototype.pushPotentialBin = function(demand) {
-	var bins;
+Location.prototype.pushPotentialBins = function(requestedDemand) {
+	if (this.supply <= this.demand)
+		return false;
+
+	var bins = [];
+	while (requestedDemand > 0 && this.potentialBins.supply > 0) {
+		var lastBin = this.potentialBins.lastItem();
+		if (this.supply - lastBin.supply > this.demand - lastBin.demand) {
+			bins.push(this.removePotentialBin(lastBin));
+			requestedDemand -= lastBin.supply;
+		} else {
+			return bins;
+		}
+	}
+
 	return bins;
 }
 
@@ -114,23 +134,46 @@ Location.prototype.findLargestBin = function() {
 	return maxBin;
 }
 
-// Varoot
-Location.prototype.packBins = function() {
+Location.prototype.allocateItems = function(minBinSize) {
+	if (minBinSize == undefined || minBinSize < 1) {
+		minBinSize = 1;
+	}
+
 	while (true) {
 		var group = this.findLargestGroup();
 		var bin = this.findLargestBin();
 
-		if (group == undefined || bin == undefined || group.demand == 0 || bin.supply == 0)
+		if (group == undefined || bin == undefined || group.demand == 0 || bin.supply < minBinSize)
 			break;
 
-		var count = Math.min(group.demand, bin.supply);
-		for (var i=0; i < count; i++) {
-			var item;
-			if (item = group.popItem()) {
-				bin.addItem(item);
-			}
+		bin.addItemsFromGroup(group);
+	}
+}
+
+Location.prototype.allocateItemsByGroup = function() {
+	for (var i=0; i < this.bins.length; i++) {
+		var bin = this.bins[i];
+		if (bin.supply == 0 || !bin.owner || !bin.owner.group())
+			continue;
+
+		var group = bin.owner.group();
+
+		if (this.groups[group]) {
+			bin.addItemsFromGroup(this.groups[group]);
 		}
 	}
+}
+
+// Varoot
+Location.prototype.packBins = function() {
+	// STEP 1: Put largest group into largest bin until the largest bin is smaller than 5
+	this.allocateItems(5);
+
+	// STEP 2: Each driver pick their LG members
+	this.allocateItemsByGroup();
+
+	// STEP 3: Put largest group into largest bin until no one is left
+	this.allocateItems();
 }
 
 // Varoot - complete
@@ -160,7 +203,7 @@ Item.prototype.inspect = function() {
 }
 
 Item.prototype.capacity = function() {
-	if (this.data.role == 'D') {
+	if (this.data.role == 'D' || this.data.role == 'V') {
 		return (this.data.capacity ? +this.data.capacity : 5);
 	}
 	return 0;
@@ -177,7 +220,7 @@ Item.prototype.makeBin = function() {
 	this.remove();
 
 	return new Bin({
-		capacity: this.supply,
+		capacity: this.supply - 1,
 		name: this.data.name,
 		owner: this
 	})
@@ -198,6 +241,14 @@ Group.prototype.addItem = function(item) {
 	return this;
 }
 
+Group.prototype.lastItem = function() {
+	if (this.items.length == 0)
+		return false;
+
+	item = this.items[this.items.length - 1];
+	return item;
+}
+
 Group.prototype.popItem = function() {
 	if (this.items.length == 0)
 		return false;
@@ -210,8 +261,8 @@ Group.prototype.popItem = function() {
 }
 
 Group.prototype.removeItem = function(item) {
-	var index;
-	if (index = this.items.indexOf(item)) {
+	var index = this.items.indexOf(item);
+	if (index >= 0) {
 		this.supply -= item.supply;
 		this.demand -= item.demand;
 		this.items.splice(index, 1);
@@ -249,6 +300,23 @@ Bin.prototype.removeItem = function(item) {
 	var index = this.items.indexOf(item);
 	this.supply++;
 	return this.items.splice(index, 1);
+}
+
+Bin.prototype.addItemsFromGroup = function(group, limit) {
+	var count = Math.min(this.supply, group.demand);
+	
+	if (limit != undefined && count > limit) {
+		count = limit;
+	}
+
+	for (var i=0; i < count; i++) {
+		var item;
+		if (item = group.popItem()) {
+			this.addItem(item);
+		}
+	}
+
+	return this;
 }
 
 locations = {};
@@ -292,10 +360,55 @@ function prepareBins() {
 	locations['Stockwell'].addBin(new Bin(busData)).addBin(new Bin(busData));
 
 	delete locations['Late'];
+
+	// Needs more bins
+	for (loc in locations) {
+		var location = locations[loc];
+		if (location.supply < location.demand) {
+			for (source in locations) {
+				if (source == loc)
+					continue;
+
+				location.pullPotentialBins(locations[source], location.demand - location.supply);
+				if (location.demand - location.supply <= 0)
+					break;
+			}
+		}
+
+		// Pull from volunteers if still not enough
+		if (location.supply < location.demand) {
+			location.pullPotentialBins(volunteers, location.demand - location.supply);
+		}
+	}
+
+	// Extra bins--turn to item
+	for (loc in locations) {
+		var location = locations[loc];
+		while (location.supply > location.demand) {
+			lastItem = location.potentialBins.lastItem();
+			if (location.supply - lastItem.supply >= location.demand) {
+				location.potentialBinToItem(lastItem);
+			} else {
+				break;
+			}
+		}
+	}
+
+	// Turn all potential bins to real bins
+	for (loc in locations) {
+		var location = locations[loc];
+		var item;
+		while (item = location.potentialBins.lastItem()) {
+			location.potentialBinToBin(item);
+		}
+	}	
 }
 
 function distributeAllLocations() {
-
+	for (loc in locations) {
+		var location = locations[loc];
+		location.packBins();
+	}	
 }
 
 fs.readFile('undergrad-retreat.json', function (err, peopleData) {
@@ -318,6 +431,8 @@ fs.readFile('undergrad-retreat.json', function (err, peopleData) {
 	for (loc in locations) {
 		locations[loc].print();
 	}
+
+	volunteers.print();
 });
 
 /*
