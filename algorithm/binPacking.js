@@ -354,9 +354,7 @@ locations = {};
 volunteers = new Location('Volunteers');
 noItems = [];
 
-function getLocation(entry) {
-	var loc = entry.transportation;
-	
+function getLocation(loc) {
 	if (locations[loc] == undefined) {
 		locations[loc] = new Location(loc);
 	}
@@ -371,9 +369,9 @@ function partitionData(data) {
 		var item = new Item(data[i]);
 
 		if (data[i].role == '') {
-			getLocation(data[i]).addItem(item);
+			getLocation(data[i].transportation).addItem(item);
 		} else if (data[i].role == 'D') {
-			getLocation(data[i]).addPotentialBin(item);
+			getLocation(data[i].transportation).addPotentialBin(item);
 		} else if (data[i].role == 'V') {
 			volunteers.addPotentialBin(item);
 		} else {
@@ -391,15 +389,11 @@ function partitionData(data) {
 
 	totalDemand += volunteers.demand;
 	totalSupply += volunteers.supply;
+
 	return (totalSupply >= totalDemand);
 }
 
 function prepareBins() {
-	var busData = { capacity: 45, name: 'Bus' };
-	locations['Bursley'].addBin(new Bin(busData));
-	locations['Cube'].addBin(new Bin(busData));
-	locations['Stockwell'].addBin(new Bin(busData)).addBin(new Bin(busData));
-
 	delete locations['Late'];
 
 	// Needs more bins
@@ -462,6 +456,12 @@ function distributeAllLocations() {
 fs.readFile('undergrad-retreat.json', function (err, peopleData) {
 	if (err) { throw err; }
 	var peopleData = JSON.parse(peopleData);
+
+	// Hard-coding buses
+	var busData = { capacity: 45, name: 'Bus' };
+	getLocation('Bursley').addBin(new Bin(busData));
+	getLocation('Cube').addBin(new Bin(busData));
+	getLocation('Stockwell').addBin(new Bin(busData)).addBin(new Bin(busData));
 
 	// STEP 1: Separate all participants (including drivers) by location and LIFE group
 	if ( ! partitionData(peopleData)) {
