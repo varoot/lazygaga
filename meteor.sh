@@ -12,14 +12,15 @@ if [ ! -d /home/vagrant/meteorapp ]; then
 	rm -f node-v0.8.23-linux-x86.tar.gz
 	curl https://install.meteor.com | sudo sh
 	sudo npm install -g meteorite
-	cd /vagrant
-	mrt create /home/vagrant/meteorapp
-	cd meteorapp
-	rm -rf .meteor && mkdir .meteor/
-	sudo mount --bind /home/vagrant/meteorapp/.meteor/ /vagrant/meteorapp/.meteor/
+	cp -rf /vagrant/meteorapp /home/vagrant/meteorapp
+	cd /home/vagrant/meteorapp
+	meteor reset
+	cd /vagrant/meteorapp
+	rm -rf .meteor
+	mkdir .meteor/
 	echo "sudo mount --bind /home/vagrant/meteorapp/.meteor/ /vagrant/meteorapp/.meteor/" >> ~/.bashrc && source ~/.bashrc
 fi
 
 cd /vagrant/meteorapp
-meteor add coffeescript less bootstrap
+mrt install
 mrt run
