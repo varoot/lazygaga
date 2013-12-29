@@ -4,20 +4,13 @@ Lazy GAGA
 Baseline Requirements
 ---------------------
 
-+ [Meteor](http://www.meteor.com/)
-+ [Vagrant](http://www.vagrantup.com/) for development on Windows
++ [Meteor](http://www.meteor.com/) or [Meteor for Windows](http://win.meteor.com/)
 
 
 Getting Started
 ---------------
 1.	Run:
 
-		vagrant up
+		meteor run
 
-	when start developing
-
-2.	Run:
-
-		vagrant suspend
-		
-	when done
+	from app directory
