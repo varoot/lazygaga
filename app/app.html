@@ -3,11 +3,26 @@
 </head>
 
 <body>
-  {{> hello}}
+	<div class="navbar navbar-static-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="brand" href="#">Lazy GAGA</a>
+				<ul class="nav">
+					<li class="active"><a href="#">Home</a>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				{{> intro}}
+			</div>
+		</div>
+	</div>
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" class="btn" />
+<template name="intro">
+	{{greeting}}
+	<input type="button" value="Click" class="btn">
 </template>

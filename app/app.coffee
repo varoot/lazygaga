@@ -1,7 +1,7 @@
 if Meteor.isClient
-	Template.hello.greeting = ()->"Welcome to app."
+	Template.intro.greeting = "Welcome!"
 
-	Template.hello.events
+	Template.intro.events
 		'click input' : ()->
 			# template data, if any, is available in 'this'
 			console?.log "You pressed the button"
