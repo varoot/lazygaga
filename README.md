@@ -13,4 +13,4 @@ Getting Started
 
 		meteor run
 
-	from app directory
+	from app folder, or run meteor-run.bat (only on Windows)
