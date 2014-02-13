@@ -1,3 +1,5 @@
+// Write OOP modules according to http://book.mixu.net/node/ch6.html
+
 var fs = require('fs');
 
 var Bin = require('./housing.bin.js');
