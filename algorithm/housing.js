@@ -1,7 +1,10 @@
 // Write OOP modules according to http://book.mixu.net/node/ch6.html
 
-var fs = require('fs');
-
+/*
+ *  1. Load item data and create items
+ *  2. 
+ *
+ */
 var Bin = require('./housing.bin.js');
 var Item = require('./housing.item.js');
 
