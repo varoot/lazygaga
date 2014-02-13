@@ -1,16 +1,19 @@
 var fs = require('fs');
+var Item = require('./housing.item.js');
 
 // ItemCollection module
 function ItemCollection() {
-	// TODO
+	this.groups = [];
 }
 
-ItemCollection.prototype.import = function(filename) {
+ItemCollection.prototype.importData = function(filename) {
 	// TODO
+	// Split groups into "items" (put them into this.groups)
 }
 
-ItemCollection.prototype.export = function(filename) {
+ItemCollection.prototype.findFirstMovingItems = function(filename) {
 	// TODO
+	// Return multiple items of the same group
 }
 
 module.exports = ItemCollection;
