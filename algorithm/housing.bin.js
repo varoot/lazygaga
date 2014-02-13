@@ -21,6 +21,7 @@ Bin.prototype.addItem = function(item) {
 Bin.prototype.removeItem = function(item) {
 	var index = this.items.indexOf(item);
 	if (index < 0) return null;
+	item.parent = null;
 	return this.items.splice(index, 1);
 }
 
