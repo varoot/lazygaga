@@ -18,6 +18,7 @@ binCol.importData('housing.bins.json');
 var maxSolutions = 10;
 
 for (var i=0; i < maxSolutions; i++) {
+	binCol.reset();
 	itemCol.generateItems();
 
 	var movingItems;
