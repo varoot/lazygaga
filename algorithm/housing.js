@@ -9,10 +9,10 @@ var BinCollection = require('./housing.bin.collection.js');
 var ItemCollection = require('./housing.item.collection.js');
 
 var itemCol = new ItemCollection();
-itemCol.importData('items.json');
+itemCol.importData('housing.items.json');
 
 var binCol = new BinCollection();
-binCol.importData('bins.json');
+binCol.importData('housing.bins.json');
 
 var movingItems;
 while (movingItems = itemCol.findFirstMovingItems()) {
