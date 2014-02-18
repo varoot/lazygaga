@@ -7,6 +7,7 @@
  */
 var BinCollection = require('./housing.bin.collection.js');
 var ItemCollection = require('./housing.item.collection.js');
+var SolutionCollection = require('./housing.solution.collection.js');
 
 var itemCol = new ItemCollection();
 itemCol.importData('housing.items.json');
@@ -14,7 +15,15 @@ itemCol.importData('housing.items.json');
 var binCol = new BinCollection();
 binCol.importData('housing.bins.json');
 
-var movingItems;
-while (movingItems = itemCol.findFirstMovingItems()) {
-	binCol.placeItems(movingItems);
+var maxSolutions = 10;
+
+for (var i=0; i < maxSolutions; i++) {
+	itemCol.generateItems();
+
+	var movingItems;
+	while (movingItems = itemCol.findFirstMovingItems()) {
+		binCol.placeItems(movingItems);
+	}
+
+	SolutionCollection.add(binCol);
 }
