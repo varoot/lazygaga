@@ -1,0 +1,32 @@
+[
+	{
+		"name": "Group 1",
+		"gender": "female",
+		"count": 5
+	},
+	{
+		"name": "Group 1",
+		"gender": "male",
+		"count": 6
+	},
+	{
+		"name": "Group 2",
+		"gender": "female",
+		"count": 6
+	},
+	{
+		"name": "Group 2",
+		"gender": "male",
+		"count": 5
+	},
+	{
+		"name": "Group 3",
+		"gender": "female",
+		"count": 5
+	},
+	{
+		"name": "Group 3",
+		"gender": "male",
+		"count": 7
+	}
+]
