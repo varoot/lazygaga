@@ -25,7 +25,7 @@ for (var i=0; i < maxSolutions; i++) {
 
 	try {
 		var movingItems;
-		while (movingItem = itemCol.findFirstMovingGroup()) {
+		while (movingItem = itemCol.findFirstMovingItem()) {
 			binCol.placeItem(movingItem);
 		}
 		
