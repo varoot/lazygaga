@@ -25,7 +25,7 @@ Item.prototype.breakdown = function(breakPoints) {
 
 		if (size == 0) break;
 
-		var item = new Item(size, extend('{}', this.data));
+		var item = new Item(size, extend({}, this.data));
 		items.push(item);
 	}
 
