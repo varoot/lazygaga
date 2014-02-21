@@ -38,9 +38,9 @@ ItemCollection.prototype.generateItems = function () {
 
 }
 
-ItemCollection.prototype.findFirstMovingItems = function(filename) {
+ItemCollection.prototype.findFirstMovingGroup = function(filename) {
 	// TODO
-	// Return multiple items of the same group
+	// Return first group to move
 }
 
 //sort by gender
