@@ -24,6 +24,10 @@ BinCollection.prototype.reset = function() {
 // Sort bins by priority
 BinCollection.prototype.sortBins = function() {
 	this.bins.sort(function(a,b) {
+		if (a.data.priority == b.data.priority) {
+			// Add randomness to the order
+			return 0.5 - Math.random();
+		}
 		return a.data.priority - b.data.priority;
 	});
 	return this;
