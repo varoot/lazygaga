@@ -9,20 +9,19 @@ function SolutionCollection() {
 	this.solutions = [];
 }
 
-function evaluateSlack(binCol) {
-	// TODO return a number, lower is better
-	return 0;
-}
+var EvalFunctions = {};
 
-function evaluatePreference(binCol) {
-	// TODO return a number, lower is better
+EvalFunctions.slack = function(binCol) {
 	return 0;
-}
+};
 
-function evaluateSplits(binCol) {
-	// TODO return a number, lower is better
+EvalFunctions.penalty = function(binCol) {
 	return 0;
-}
+};
+
+EvalFunctions.itemCount = function(binCol) {
+	return 0;
+};
 
 function sortScore(a, b) {
 	// TODO real equation
@@ -35,11 +34,12 @@ SolutionCollection.prototype.add = function(binCollection) {
 
 	var sol = {};
 	sol.bins = binCollection.bins;
-	sol.score = {
-		slack: evaluateSlack(binCollection),
-		preference: evaluatePreference(binCollection),
-		splits: evaluateSplits(binCollection)
+
+	sol.score = {};
+	for (funcName in EvalFunctions) {
+		sol.score[funcName] = EvalFunctions[funcName](binCollection);
 	}
+
 	this.solutions.push(sol);
 
 	return this;
