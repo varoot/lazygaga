@@ -15,6 +15,10 @@ Bin.prototype.addItem = function(item) {
 		}
 		item.parent = this;
 	}
+	else
+	{
+		throw new Error('Cannot fit item into bin');
+	}
 	return this;
 }
 
