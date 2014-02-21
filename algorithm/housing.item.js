@@ -16,6 +16,21 @@ Item.prototype.moveTo = function(bin) {
 	return this;
 }
 
+Item.prototype.breakdown = function(breakPoints) {
+	var items = [];
+
+	for (var i=0; i < breakPoints.length; i++) {
+		var size = Math.min(this.demand, breakPoints[i]);
+
+		if (size == 0) break;
+
+		var item = new Item(size, this.data);
+		items.push(item);
+	}
+
+	return items;
+}
+
 Item.prototype.toString = function() {
 	var output = 'Untitled';
 	if (this.data.title) {

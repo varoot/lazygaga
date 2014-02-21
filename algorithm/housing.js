@@ -23,12 +23,16 @@ for (var i=0; i < maxSolutions; i++) {
 	binCol.reset();
 	itemCol.generateItems();
 
-	var movingItems;
-	while (movingGroup = itemCol.findFirstMovingGroup()) {
-		binCol.placeGroup(movingGroup);
+	try {
+		var movingItems;
+		while (movingItem = itemCol.findFirstMovingGroup()) {
+			binCol.placeItem(movingItem);
+		}
+		
+		solCol.add(binCol);
+	} catch (err) {
+		console.log(err.name+': '+err.message);
 	}
-
-	solCol.add(binCol);
 }
 
 console.log(''+solCol);
