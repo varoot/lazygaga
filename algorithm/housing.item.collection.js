@@ -64,8 +64,3 @@ ItemCollection.prototype.findFirstMovingItem = function() {
 // }
 
 module.exports = ItemCollection;
-
-var  itemCol = new ItemCollection();
-itemCol.importData('housing.items.json');
-itemCol.reset();
-console.log(itemCol.items);

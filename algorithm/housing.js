@@ -21,7 +21,7 @@ var maxSolutions = 10;
 
 for (var i=0; i < maxSolutions; i++) {
 	binCol.reset();
-	itemCol.generateItems();
+	itemCol.reset();
 
 	try {
 		var movingItems;
