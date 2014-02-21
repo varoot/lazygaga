@@ -31,7 +31,13 @@ Bin.prototype.removeItem = function(item) {
 
 Bin.prototype.toString = function() {
 	var output = '- ';
-	output += this.data.name+' ('+this.data.gender+')'+'\n';
+	output += this.data.name;
+
+	if (this.items.length > 0) {
+		output += ' ('+this.data.gender+')';	
+	}
+
+	output += '\n';
 	for (var i = 0; i < this.items.length; i++) {
 		output += '  - ';
 		output += this.items[i];
