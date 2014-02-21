@@ -4,19 +4,43 @@ var Item = require('./housing.item.js');
 
 // ItemCollection module
 function ItemCollection() {
+	this.items = [];
 }
 
 ItemCollection.prototype.importData = function(filename) {
-	// TODO
-	// Split groups into "items" (put them into this.groups)
-	var peopleData = fs.readFileSync(filename);
-	this.peopleData = JSON.parse(peopleData);
+	this.itemsData = JSON.parse(fs.readFileSync(filename));
 	return this;
 }
 
-//sort group
-ItemCollection.prototype.sortGroup = function () {
+ItemCollection.prototype.reset = function() {
+	this.items = [];
+	for (var i = 0; i < this.itemsData.length; i++) {
+		this.items.push(new Item(this.itemsData[i].count, this.itemsData[i]));
+	}
+	this.sortItems();
+	return this;
+}
 
+// Sort Items by gender & count
+ItemCollection.prototype.sortItems = function() {
+	this.items.sort(function(a,b) {
+		if (a.data.gender < b.data.gender){
+			return -1;
+		}
+
+		else if (a.data.gender == b.data.gender){
+			return compareCount(a,b);
+		}
+
+		else {
+			return 1;
+		}
+	});
+}
+
+//compare count
+function compareCount(a,b) {
+	return b.data.count - a.data.count;
 }
 
 //generate subgroup
@@ -38,29 +62,29 @@ ItemCollection.prototype.generateItems = function () {
 
 }
 
-ItemCollection.prototype.findFirstMovingGroup = function(filename) {
-	// TODO
-	// Return first group to move
+ItemCollection.prototype.findFirstMovingGroup = function() {
+	return this.items.splice(0,1);
 }
 
 //sort by gender
-function sortGender(peopleData){
-	var femaleGroup = [];
-	var maleGroup = [];
-	for (var i=0;i<peopleData.length;i++){
-		if (peopleData[i].gender == 'female') {
-			femaleGroup.push(peopleData[i]);
-		}
+// function sortGender(peopleData){
+// 	var femaleGroup = [];
+// 	var maleGroup = [];
+// 	for (var i=0;i<peopleData.length;i++){
+// 		if (peopleData[i].gender == 'female') {
+// 			femaleGroup.push(peopleData[i]);
+// 		}
 
-		else {
-			maleGroup.push(peopleData[i]);
-		}
-	}
-	return [femaleGroup, maleGroup];
-}
+// 		else {
+// 			maleGroup.push(peopleData[i]);
+// 		}
+// 	}
+// 	return [femaleGroup, maleGroup];
+// }
 
 module.exports = ItemCollection;
 
 var  itemCol = new ItemCollection();
 itemCol.importData('housing.items.json');
-itemCol.generateItems();
+itemCol.reset();
+console.log(itemCol.items);
