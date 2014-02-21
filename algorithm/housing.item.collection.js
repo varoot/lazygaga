@@ -40,6 +40,9 @@ ItemCollection.prototype.sortItems = function() {
 
 //compare count
 function compareCount(a,b) {
+	if (a.data.count == b.data.count) {
+		return 0.5 - Math.random();
+	}
 	return b.data.count - a.data.count;
 }
 
