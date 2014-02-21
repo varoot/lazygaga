@@ -43,8 +43,6 @@ function compareCount(a,b) {
 	return b.data.count - a.data.count;
 }
 
-}
-
 ItemCollection.prototype.findFirstMovingItem = function() {
 	return this.items.shift();
 }
