@@ -27,6 +27,7 @@ Bin.prototype.removeItem = function(item) {
 
 Bin.prototype.toString = function() {
 	var output = '[ ';
+	output += this.data.name+': ';
 	for (var i = 0; i < this.items.length; i++) {
 		if (i > 0) {
 			output += ', '

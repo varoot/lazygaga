@@ -15,6 +15,8 @@ itemCol.importData('housing.items.json');
 var binCol = new BinCollection();
 binCol.importData('housing.bins.json');
 
+var solCol = new SolutionCollection();
+
 var maxSolutions = 10;
 
 for (var i=0; i < maxSolutions; i++) {
@@ -22,9 +24,11 @@ for (var i=0; i < maxSolutions; i++) {
 	itemCol.generateItems();
 
 	var movingItems;
-	while (movingItems = itemCol.findFirstMovingItems()) {
-		binCol.placeItems(movingItems);
+	while (movingGroup = itemCol.findFirstMovingGroup()) {
+		binCol.placeGroup(movingGroup);
 	}
 
-	SolutionCollection.add(binCol);
+	solCol.add(binCol);
 }
+
+console.log(''+solCol);
