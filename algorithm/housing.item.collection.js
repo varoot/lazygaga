@@ -46,7 +46,7 @@ function compareCount(a,b) {
 }
 
 ItemCollection.prototype.findFirstMovingItem = function() {
-	return this.items.splice(0,1);
+	return this.items.shift();
 }
 
 //sort by gender
