@@ -7,8 +7,39 @@ function BinCollection() {
 	this.bins = [];
 }
 
+BinCollection.prototype.importBin = function(bin) {
+	if (bin.bins) {
+		// This is a group
+		this.importGroup(bin);
+	} else {
+		this.binsData.push(bin);
+	}
+}
+
+BinCollection.prototype.importGroup = function(group) {
+	// Import Group data
+	var groupData = {};
+	var extend = require('util')._extend;
+	for (attr in group) {
+		if (attr == 'bins' || attr == 'group') {
+			continue;
+		}
+		groupData[attr] = group[attr];
+	}
+
+	for (var i=0; i < group.bins.length; i++) {
+		this.importBin(extend(extend({}, groupData), group.bins[i]));
+	}
+}
+
 BinCollection.prototype.importData = function(filename) {
-	this.binsData = JSON.parse(fs.readFileSync(filename));
+	this.binsData = [];
+	var bins = JSON.parse(fs.readFileSync(filename));
+
+	for (var i=0; i < bins.length; i++) {
+		this.importBin(bins[i]);
+	}
+
 	return this;
 }
 
