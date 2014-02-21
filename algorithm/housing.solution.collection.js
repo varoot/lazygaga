@@ -26,12 +26,16 @@ EvalFunctions.penalty = function(binCol) {
 };
 
 EvalFunctions.itemCount = function(binCol) {
-	return 0;
+	var itemCount = 0;
+	for (var i=0; i < binCol.bins.length; i++) {
+		itemCount += binCol.bins[i].items.length;
+	}
+	return itemCount;
 };
 
 function sortScore(a, b) {
 	// TODO real equation
-	return a.slack - b.slack;
+	return (a.score.slack + a.score.itemCount) - (b.score.slack + b.score.itemCount);
 }
 
 SolutionCollection.prototype.add = function(binCollection) {
