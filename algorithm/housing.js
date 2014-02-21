@@ -17,7 +17,7 @@ binCol.importData('housing.bins.json');
 
 var solCol = new SolutionCollection();
 
-var maxSolutions = 10;
+var maxSolutions = 1000;
 
 for (var i=0; i < maxSolutions; i++) {
 	binCol.reset();
