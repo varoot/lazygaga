@@ -43,26 +43,9 @@ function compareCount(a,b) {
 	return b.data.count - a.data.count;
 }
 
-//generate subgroup
-ItemCollection.prototype.generateItems = function () {
-	// step 1. sortGender
-	var sortedByGender = sortGender(this.peopleData);
-	this.femaleGroup = sortedByGender[0];
-	this.maleGroup = sortedByGender[1];
-	// step 2. generate subgroup (new item)
-	// step 2.1 female 
-	// for (i=0;i<femaleGroup.length;i++){
-	// 	var groupSiz = femaleGroup[i].count;
-	// 	if (groupsSiz < 2*minPeople){
-	// 		this.groups.push()
-	// 	}  
-	// }
-	// step 3. create  
-
-
 }
 
-ItemCollection.prototype.findFirstMovingGroup = function() {
+ItemCollection.prototype.findFirstMovingItem = function() {
 	return this.items.splice(0,1);
 }
 
