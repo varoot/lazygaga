@@ -12,7 +12,13 @@ function SolutionCollection() {
 var EvalFunctions = {};
 
 EvalFunctions.slack = function(binCol) {
-	return 0;
+	var slacks = 0;
+	for (var i=0; i < binCol.bins.length; i++) {
+		if (binCol.bins[i].items.length > 0) {
+			slacks += binCol.bins[i].supply;
+		}
+	}
+	return slacks;
 };
 
 EvalFunctions.penalty = function(binCol) {
@@ -25,7 +31,7 @@ EvalFunctions.itemCount = function(binCol) {
 
 function sortScore(a, b) {
 	// TODO real equation
-	return (a.slack - b.slack);
+	return a.slack - b.slack;
 }
 
 SolutionCollection.prototype.add = function(binCollection) {
@@ -52,11 +58,19 @@ SolutionCollection.prototype.sort = function() {
 }
 
 SolutionCollection.prototype.toString = function() {
-	var output = 'Solutions:';
+	var output = 'Solutions:\n';
 
 	// Top 3
 	for (var i=0; i < Math.min(3, this.solutions.length); i++) {
 		output += 'Solution '+(i+1)+'\n';
+
+		// Score
+		output += '{'
+		for (scoreType in this.solutions[i].score) {
+			output += scoreType+': '+this.solutions[i].score[scoreType]+', ';
+		}
+		output += '}\n';
+
 		output += this.solutions[i].bins.join('');
 		output += '\n\n';
 	}
