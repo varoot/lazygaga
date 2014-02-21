@@ -61,6 +61,20 @@ SolutionCollection.prototype.sort = function() {
 	return this;
 }
 
+function solutionToString(sol) {
+	// Score
+	var output = '{'
+	for (scoreType in sol.score) {
+		output += scoreType+': '+sol.score[scoreType]+', ';
+	}
+	output += '}\n';
+
+	output += sol.bins.join('');
+	output += '\n\n';
+
+	return output;
+}
+
 SolutionCollection.prototype.toString = function() {
 	var output = 'Solutions:\n';
 
@@ -68,16 +82,12 @@ SolutionCollection.prototype.toString = function() {
 	for (var i=0; i < Math.min(3, this.solutions.length); i++) {
 		output += 'Solution '+(i+1)+'\n';
 
-		// Score
-		output += '{'
-		for (scoreType in this.solutions[i].score) {
-			output += scoreType+': '+this.solutions[i].score[scoreType]+', ';
-		}
-		output += '}\n';
-
-		output += this.solutions[i].bins.join('');
-		output += '\n\n';
+		output += solutionToString(this.solutions[i]);
 	}
+
+	output += 'Worst Solution\n';
+	output += solutionToString(this.solutions[this.solutions.length - 1]);
+
 	return output;
 }
 

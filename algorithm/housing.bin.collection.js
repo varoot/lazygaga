@@ -19,19 +19,22 @@ BinCollection.prototype.reset = function() {
 		this.bins.push(new Bin(this.binsData[i].capacity, extend({}, this.binsData[i])));
 	}
 
-	this.sortBins();
+	// Don't sort bins now
+	//this.sortBins();
 	return this;
+}
+
+function binSort(a, b) {
+	if (a.data.priority == b.data.priority) {
+		// Add randomness to the order
+		return 0.5 - Math.random();
+	}
+	return a.data.priority - b.data.priority;
 }
 
 // Sort bins by priority
 BinCollection.prototype.sortBins = function() {
-	this.bins.sort(function(a,b) {
-		if (a.data.priority == b.data.priority) {
-			// Add randomness to the order
-			return 0.5 - Math.random();
-		}
-		return a.data.priority - b.data.priority;
-	});
+	this.bins.sort(binSort);
 	return this;
 }
 
@@ -54,6 +57,9 @@ BinCollection.prototype.placeItem = function(item) {
 	var genderBins = this.bins.filter(function(bin) {
 		return ( bin.supply >= minSpace && (! bin.data.gender || bin.data.gender == item.data.gender));
 	});
+
+	// Include randomness in filtered bins
+	genderBins.sort(binSort);
 
 	// STEP 2: Find how many bins we need to fit the items
 	var supply = 0;
