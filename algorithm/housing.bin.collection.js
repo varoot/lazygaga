@@ -13,18 +13,28 @@ BinCollection.prototype.importData = function(filename) {
 
 BinCollection.prototype.reset = function() {
 	this.bins = [];
-	for (var i = 0; i < bins.length; i++) {
-		this.bins.push(new Bin(bins[i].capacity, bins[i]));
+	for (var i = 0; i < this.binsData.length; i++) {
+		this.bins.push(new Bin(this.binsData[i].capacity, this.binsData[i]));
 	}
 
+	this.sortBins();
 	return this;
 }
 
-BinCollection.prototype.placeItems = function(items) {
-	// Items is an array of subgroups need to be placed
+// Sort bins by priority
+BinCollection.prototype.sortBins = function() {
+	this.bins.sort(function(a,b) {
+		return a.data.priority - b.data.priority;
+	});
+	return this;
+}
 
-	// STEP 1: Find the first priority items
-	// STEP 2: Filter the corner ones
+BinCollection.prototype.placeGroup = function(group) {
+	// Take a group and split into items
+	// and place them into bins
+
+	// STEP 1: Find the first priority bins
+	
 	return this;
 }
 
@@ -34,8 +44,3 @@ BinCollection.prototype.print = function() {
 }
 
 module.exports = BinCollection;
-
-var binCol = new BinCollection();
-binCol.importData('housing.bins.json');
-binCol.reset();
-binCol.print();
