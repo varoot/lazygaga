@@ -35,4 +35,5 @@ for (var i=0; i < maxSolutions; i++) {
 	}
 }
 
+solCol.sort();
 console.log(''+solCol);

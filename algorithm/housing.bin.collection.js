@@ -58,7 +58,7 @@ BinCollection.prototype.placeItem = function(item) {
 	var supply = 0;
 	var binsNeeded = 0;
 	while (supply < item.demand && binsNeeded < genderBins.length) {
-		supply += genderBins[binsNeeded];
+		supply += genderBins[binsNeeded].supply;
 		binsNeeded++;
 	}
 
@@ -96,7 +96,7 @@ BinCollection.prototype.placeItem = function(item) {
 	} else {
 		items = [item];
 	}
-	
+
 	// STEP 4: Put items into bins
 	for (var i=0; i < items.length; i++) {
 		fittingBins[i].addItem(items[i]);

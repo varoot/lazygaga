@@ -33,8 +33,8 @@ Item.prototype.breakdown = function(breakPoints) {
 
 Item.prototype.toString = function() {
 	var output = 'Untitled';
-	if (this.data.title) {
-		output = this.data.title;
+	if (this.data.name) {
+		output = this.data.name;
 	}
 	return output+'('+this.demand+')';
 };

@@ -17,7 +17,7 @@ Bin.prototype.addItem = function(item) {
 	}
 	else
 	{
-		throw new Error('Cannot fit item into bin');
+		throw new Error('Cannot fit item ('+item.demand+') into bin ('+this.supply+')');
 	}
 	return this;
 }
@@ -30,15 +30,13 @@ Bin.prototype.removeItem = function(item) {
 }
 
 Bin.prototype.toString = function() {
-	var output = '[ ';
-	output += this.data.name+': ';
+	var output = '- ';
+	output += this.data.name+' ('+this.data.gender+')'+'\n';
 	for (var i = 0; i < this.items.length; i++) {
-		if (i > 0) {
-			output += ', '
-		}
+		output += '  - ';
 		output += this.items[i];
+		output += '\n';
 	};
-	output += ' ]'
 	return output;
 };
 
