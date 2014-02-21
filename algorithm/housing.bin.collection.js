@@ -13,9 +13,10 @@ BinCollection.prototype.importData = function(filename) {
 }
 
 BinCollection.prototype.reset = function() {
+	var extend = require('util')._extend;
 	this.bins = [];
 	for (var i = 0; i < this.binsData.length; i++) {
-		this.bins.push(new Bin(this.binsData[i].capacity, this.binsData[i]));
+		this.bins.push(new Bin(this.binsData[i].capacity, extend({}, this.binsData[i])));
 	}
 
 	this.sortBins();

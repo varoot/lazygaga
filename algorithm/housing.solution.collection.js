@@ -55,7 +55,7 @@ SolutionCollection.prototype.toString = function() {
 	var output = 'Solutions:';
 
 	// Top 3
-	for (var i=0; i < 3; i++) {
+	for (var i=0; i < Math.min(3, this.solutions.length); i++) {
 		output += 'Solution '+(i+1)+'\n';
 		output += this.solutions[i].bins.join('');
 		output += '\n\n';

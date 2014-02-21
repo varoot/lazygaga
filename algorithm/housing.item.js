@@ -17,6 +17,7 @@ Item.prototype.moveTo = function(bin) {
 }
 
 Item.prototype.breakdown = function(breakPoints) {
+	var extend = require('util')._extend;
 	var items = [];
 
 	for (var i=0; i < breakPoints.length; i++) {
@@ -24,7 +25,7 @@ Item.prototype.breakdown = function(breakPoints) {
 
 		if (size == 0) break;
 
-		var item = new Item(size, this.data);
+		var item = new Item(size, extend('{}', this.data));
 		items.push(item);
 	}
 
