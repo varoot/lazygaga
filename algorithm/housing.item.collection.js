@@ -24,15 +24,12 @@ ItemCollection.prototype.reset = function() {
 // Sort Items by gender & count
 ItemCollection.prototype.sortItems = function() {
 	this.items.sort(function(a,b) {
-		if (a.data.gender < b.data.gender){
+		if (a.data.gender < b.data.gender) {
 			return -1;
-		}
-
-		else if (a.data.gender == b.data.gender){
-			return compareCount(a,b);
-		}
-
-		else {
+		} else if (a.data.gender == b.data.gender) {
+			return 0.5 - Math.random();
+			//return compareCount(a,b);
+		} else {
 			return 1;
 		}
 	});
