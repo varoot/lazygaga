@@ -29,6 +29,11 @@ Item.prototype.breakdown = function(breakPoints) {
 		items.push(item);
 	}
 
+	// Add siblings to each item so they can find one another
+	for (var i=0; i < items.length; i++) {
+		items[i].siblings = items.splice(i, 1);
+	}
+
 	return items;
 }
 
