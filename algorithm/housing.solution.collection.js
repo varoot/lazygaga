@@ -33,11 +33,6 @@ EvalFunctions.itemCount = function(binCol) {
 	return itemCount;
 };
 
-function sortScore(a, b) {
-	// TODO real equation
-	return (a.score.slack + a.score.itemCount) - (b.score.slack + b.score.itemCount);
-}
-
 SolutionCollection.prototype.add = function(binCollection) {
 	// TODO
 	// Save and evaluate this solution
@@ -52,12 +47,51 @@ SolutionCollection.prototype.add = function(binCollection) {
 
 	this.solutions.push(sol);
 
+	this.removeDominated();
+
 	return this;
 }
 
-SolutionCollection.prototype.sort = function() {
-	// TODO sort by score
-	this.solutions.sort(sortScore);
+function dominantComp(a,b) {
+	var result;
+	for (attr in a.score) {
+		var comp = b.score[attr] - a.score[attr];
+		if (result < 0 && comp > 0 || result > 0 && comp < 0) {
+			return 0;
+		}
+		if (result == undefined || result == 0) {
+			result = comp;
+		}
+	}
+	return result;
+}
+
+SolutionCollection.prototype.removeDominated = function() {
+	var i, j;
+	i = 0;
+	while (i < this.solutions.length) {
+		j = 0;
+		while (j < this.solutions.length) {
+			if (i == j) {
+				j++;
+				continue;
+			}
+
+			var comp = dominantComp(this.solutions[i], this.solutions[j]);
+			if (comp < 0) {
+				// j dominates i -> kill i
+				this.solutions.splice(i,1);
+				i--;
+				break;
+			} else if (comp > 1) {
+				// i dominates j -> kill j
+				this.solutions.splice(j,1);
+			} else {
+				j++;
+			}
+		}
+		i++;
+	}
 	return this;
 }
 
@@ -76,7 +110,7 @@ function solutionToString(sol) {
 }
 
 SolutionCollection.prototype.toString = function() {
-	var output = 'Solutions:\n';
+	var output = 'Solutions ('+this.solutions.length+' total):\n';
 
 	// Top 3
 	for (var i=0; i < Math.min(3, this.solutions.length); i++) {
@@ -85,8 +119,10 @@ SolutionCollection.prototype.toString = function() {
 		output += solutionToString(this.solutions[i]);
 	}
 
+	/*
 	output += 'Worst Solution\n';
 	output += solutionToString(this.solutions[this.solutions.length - 1]);
+	*/
 
 	return output;
 }
