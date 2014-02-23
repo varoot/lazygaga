@@ -32,7 +32,9 @@ Item.prototype.breakdown = function(breakPoints) {
 
 	// Add siblings to each item so they can find one another
 	for (var i=0; i < items.length; i++) {
-		items[i].siblings = items.splice(i, 1);
+		var siblings = items.slice();
+		siblings.splice(i, 1);
+		items[i].siblings = siblings;
 	}
 
 	return items;

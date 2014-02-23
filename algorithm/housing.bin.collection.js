@@ -18,7 +18,7 @@ BinCollection.prototype.importBin = function(bin) {
 
 BinCollection.prototype.importGroup = function(group) {
 	// Import Group data
-	var groupData = { group: group.group };
+	var groupData = { group: group.group, groupSize: group.bins.length };
 	var extend = require('util')._extend;
 	for (attr in group) {
 		if (attr == 'bins' || attr == 'group') {
@@ -30,6 +30,47 @@ BinCollection.prototype.importGroup = function(group) {
 	for (var i=0; i < group.bins.length; i++) {
 		this.importBin(extend(extend({}, groupData), group.bins[i]));
 	}
+}
+
+BinCollection.prototype.find = function(binName) {
+	for (var i=0; i < this.bins.length; i++) {
+		if (this.bins[i].data.name == binName) {
+			return this.bins[i];
+		}
+	}
+	return null;
+}
+
+// http://en.wikipedia.org/wiki/Graph_traversal#Breadth-first_search
+BinCollection.prototype.distance = function(start, end) {
+	var generationMark = '*';
+	var q = []
+	var visited = [];
+	q.unshift(start);
+	visited.push(start);
+	distance = 0;
+	while (q.length > 0) {
+		var t = q.pop();
+		if (t == generationMark) {
+			distance++;
+			continue;
+		}
+		if (t == end) return distance;
+		var adjacent = t.data.adjacent;
+		if (q.indexOf(generationMark) < 0) {
+			q.unshift(generationMark);
+		}
+		for (var i=0; i < adjacent.length; i++) {
+			var next = this.find(adjacent[i]);
+			if (!next) continue;
+			if (visited.indexOf(next) < 0) {
+				visited.push(next);
+				q.unshift(next);
+			}
+		}
+	}
+	// Not traversable
+	return null;
 }
 
 BinCollection.prototype.importData = function(filename) {

@@ -33,15 +33,19 @@ EvalFunctions.penalty = function(binCol) {
 };
 
 EvalFunctions.spread = function(binCol) {
-	var spread = 0;
+	var spread = 0.0;
 	for (var i=0; i < binCol.bins.length; i++) {
 		var bin = binCol.bins[i];
 		for (var j=0; j < bin.items.length; j++) {
 			var item = bin.items[j];
 			for (var k=0; k < item.siblings.length; k++) {
 				var sibling = item.siblings[k];
-				if (sibling.parent.data.group != bin.group) {
+				if (!bin.data.group || !sibling.parent.data.group || sibling.parent.data.group != bin.data.group) {
 					spread++;
+				} else if (bin != sibling.parent) {
+					// Calculate spread by how far it is to reach through adjacent bins
+					var distance = binCol.distance(bin, sibling.parent);
+					spread += distance / bin.data.groupSize;
 				}
 			}
 		}
@@ -71,15 +75,13 @@ SolutionCollection.prototype.add = function(binCollection) {
 
 	this.solutions.push(sol);
 
-	this.removeDominated();
-
 	return this;
 }
 
 function dominantComp(a,b) {
 	var result;
-	for (attr in a.score) {
-		var comp = b.score[attr] - a.score[attr];
+	for (var criteria in a.score) {
+		var comp = b.score[criteria] - a.score[criteria];
 		if (result < 0 && comp > 0 || result > 0 && comp < 0) {
 			return 0;
 		}
@@ -91,6 +93,14 @@ function dominantComp(a,b) {
 }
 
 SolutionCollection.prototype.removeDominated = function() {
+	// Sort the solutions first
+	this.solutions.sort(function(a,b) {
+		for (var criteria in EvalFunctions) {
+			if (a.score[criteria] == b.score[criteria])
+				continue;
+			return a.score[criteria] - b.score[criteria];
+		}
+	});
 	var i, j;
 	i = 0;
 	while (i < this.solutions.length) {
@@ -123,7 +133,7 @@ function solutionToString(sol) {
 	// Score
 	var output = '{'
 	for (scoreType in sol.score) {
-		output += scoreType+': '+sol.score[scoreType]+', ';
+		output += scoreType+': '+sol.score[scoreType].toFixed(2)+', ';
 	}
 	output += '}\n';
 
@@ -143,10 +153,8 @@ SolutionCollection.prototype.toString = function() {
 		output += solutionToString(this.solutions[i]);
 	}
 
-	/*
 	output += 'Worst Solution\n';
 	output += solutionToString(this.solutions[this.solutions.length - 1]);
-	*/
 
 	return output;
 }
