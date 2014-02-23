@@ -18,7 +18,7 @@ BinCollection.prototype.importBin = function(bin) {
 
 BinCollection.prototype.importGroup = function(group) {
 	// Import Group data
-	var groupData = {};
+	var groupData = { group: group.group };
 	var extend = require('util')._extend;
 	for (attr in group) {
 		if (attr == 'bins' || attr == 'group') {

@@ -22,7 +22,31 @@ EvalFunctions.slack = function(binCol) {
 };
 
 EvalFunctions.penalty = function(binCol) {
-	return 0;
+	var penalties = 0;
+	for (var i=0; i < binCol.bins.length; i++) {
+		var bin = binCol.bins[i];
+		if (bin.items.length > 0) {
+			penalties += bin.data.penalties[bin.data.gender];
+		}
+	}
+	return penalties;
+};
+
+EvalFunctions.spread = function(binCol) {
+	var spread = 0;
+	for (var i=0; i < binCol.bins.length; i++) {
+		var bin = binCol.bins[i];
+		for (var j=0; j < bin.items.length; j++) {
+			var item = bin.items[j];
+			for (var k=0; k < item.siblings.length; k++) {
+				var sibling = item.siblings[k];
+				if (sibling.parent.data.group != bin.group) {
+					spread++;
+				}
+			}
+		}
+	}
+	return spread;
 };
 
 EvalFunctions.itemCount = function(binCol) {

@@ -6,6 +6,7 @@ function Item(size, data) {
 	this.demand = size;
 	this.data = data || {};
 	this.parent = null;
+	this.siblings = [];
 }
 
 Item.prototype.moveTo = function(bin) {
