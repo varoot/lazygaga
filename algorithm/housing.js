@@ -31,7 +31,7 @@ for (var i=0; i < maxSolutions; i++) {
 		
 		solCol.add(binCol);
 	} catch (err) {
-		console.log(err.name+': '+err.message);
+		//console.log(err.name+': '+err.message);
 	}
 }
 
