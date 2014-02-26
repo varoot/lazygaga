@@ -32,31 +32,36 @@
 	},
 	{
 		"group": "Houses",
-		"capacity": 10,
 		"priority": 2,
 		"bins": [
 			{
 				"name": "Maple",
+				"capacity": 11,
 				"adjacent": ["Hickory", "White Oak"]
 			},
 			{
 				"name": "White Oak",
+				"capacity": 11,
 				"adjacent": ["Maple", "Beech"]
 			},
 			{
 				"name": "Beech",
+				"capacity": 11,
 				"adjacent": ["White Oak", "Black Cherry"]
 			},
 			{
 				"name": "Black Cherry",
+				"capacity": 11,
 				"adjacent": ["Beech", "White Pine"]
 			},
 			{
 				"name": "White Pine",
+				"capacity": 11,
 				"adjacent": ["Black Cherry", "Hickory"]
 			},
 			{
 				"name": "Hickory",
+				"capacity": 10,
 				"adjacent": ["White Pine", "Maple"]
 			}
 		]
