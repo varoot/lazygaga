@@ -20,11 +20,13 @@ Item.prototype.moveTo = function(bin) {
 Item.prototype.breakdown = function(breakPoints) {
 	var extend = require('util')._extend;
 	var items = [];
+	var demand = this.demand;
 
 	for (var i=0; i < breakPoints.length; i++) {
-		var size = Math.min(this.demand, breakPoints[i]);
+		var size = Math.min(demand, breakPoints[i]);
 
 		if (size == 0) break;
+		demand -= size;
 
 		var item = new Item(size, extend({}, this.data));
 		items.push(item);
