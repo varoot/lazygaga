@@ -1,4 +1,4 @@
 // Config values
 module.exports = {
-	minItemSize: 3
+	minItemSize: 1
 };

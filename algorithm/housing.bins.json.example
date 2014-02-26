@@ -2,10 +2,15 @@
 	{
 		"group": "Sycamore",
 		"priority": 1,
+		"penalties": {
+			"female": 0,
+			"male": 1
+		},
 		"bins": [
 			{
 				"name": "Sycamore 1",
 				"capacity": 5,
+				"priority": 2,
 				"adjacent": ["Sycamore 2", "Sycamore 3", "Sycamore 4", "Sycamore Lower"]
 			},
 			{
@@ -26,37 +31,41 @@
 			{
 				"name": "Sycamore Lower",
 				"capacity": 4,
+				"priority": 2,
 				"adjacent": ["Sycamore 1", "Sycamore 2", "Sycamore 3", "Sycamore 4"]
 			}
 		]
 	},
 	{
 		"group": "Houses",
+		"capacity": 11,
 		"priority": 2,
+		"penalties": {
+			"female": 4,
+			"male": 2
+		},
 		"bins": [
 			{
 				"name": "Maple",
-				"capacity": 11,
+				"priority": 1,
 				"adjacent": ["Hickory", "White Oak"]
 			},
 			{
 				"name": "White Oak",
-				"capacity": 11,
+				"priority": 1,
 				"adjacent": ["Maple", "Beech"]
 			},
 			{
 				"name": "Beech",
-				"capacity": 11,
+				"priority": 1,
 				"adjacent": ["White Oak", "Black Cherry"]
 			},
 			{
 				"name": "Black Cherry",
-				"capacity": 11,
 				"adjacent": ["Beech", "White Pine"]
 			},
 			{
 				"name": "White Pine",
-				"capacity": 11,
 				"adjacent": ["Black Cherry", "Hickory"]
 			},
 			{
