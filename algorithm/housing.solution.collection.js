@@ -91,13 +91,13 @@ SolutionCollection.prototype.add = function(binCollection) {
 }
 
 function dominantComp(a,b) {
-	var result;
+	var result = 0;
 	for (var criteria in a.score) {
 		var comp = b.score[criteria] - a.score[criteria];
 		if (result < 0 && comp > 0 || result > 0 && comp < 0) {
 			return 0;
 		}
-		if (result == undefined || result == 0) {
+		if (result == 0) {
 			result = comp;
 		}
 	}
