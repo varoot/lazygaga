@@ -32,6 +32,18 @@ EvalFunctions.spread = function(binCol) {
 	return spread;
 };
 
+EvalFunctions.itemRatio = function(binCol) {
+	var itemCount = 0;
+	var itemSize = 0;
+	for (var i=0; i < binCol.bins.length; i++) {
+		itemCount += binCol.bins[i].items.length;
+		for (var j=0; j < binCol.bins[i].items.length; j++) {
+			itemSize += 1/binCol.bins[i].items[j].demand;
+		}
+	}
+	return itemSize/itemCount;
+};
+
 EvalFunctions.itemCount = function(binCol) {
 	var itemCount = 0;
 	for (var i=0; i < binCol.bins.length; i++) {
