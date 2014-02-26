@@ -130,6 +130,10 @@ BinCollection.prototype.placeItem = function(item) {
 		return ( bin.supply >= minSpace && (! bin.data.gender || bin.data.gender == item.data.gender));
 	});
 
+	if (genderBins.length == 0) {
+		throw new Error('No bin available');
+	}
+
 	// Include randomness in filtered bins
 	genderBins.sort(binSort);
 

@@ -153,8 +153,10 @@ SolutionCollection.prototype.toString = function() {
 		output += solutionToString(this.solutions[i]);
 	}
 
-	output += 'Worst Solution\n';
-	output += solutionToString(this.solutions[this.solutions.length - 1]);
+	if (this.solutions.length > 3) {
+		output += 'Worst Solution\n';
+		output += solutionToString(this.solutions[this.solutions.length - 1]);
+	}
 
 	return output;
 }
