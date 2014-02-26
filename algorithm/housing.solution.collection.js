@@ -11,27 +11,6 @@ function SolutionCollection() {
 
 var EvalFunctions = {};
 
-EvalFunctions.slack = function(binCol) {
-	var slacks = 0;
-	for (var i=0; i < binCol.bins.length; i++) {
-		if (binCol.bins[i].items.length > 0) {
-			slacks += binCol.bins[i].supply;
-		}
-	}
-	return slacks;
-};
-
-EvalFunctions.penalty = function(binCol) {
-	var penalties = 0;
-	for (var i=0; i < binCol.bins.length; i++) {
-		var bin = binCol.bins[i];
-		if (bin.items.length > 0) {
-			penalties += bin.data.penalties[bin.data.gender];
-		}
-	}
-	return penalties;
-};
-
 EvalFunctions.spread = function(binCol) {
 	var spread = 0.0;
 	for (var i=0; i < binCol.bins.length; i++) {
@@ -59,6 +38,27 @@ EvalFunctions.itemCount = function(binCol) {
 		itemCount += binCol.bins[i].items.length;
 	}
 	return itemCount;
+};
+
+EvalFunctions.slack = function(binCol) {
+	var slacks = 0;
+	for (var i=0; i < binCol.bins.length; i++) {
+		if (binCol.bins[i].items.length > 0) {
+			slacks += binCol.bins[i].supply;
+		}
+	}
+	return slacks;
+};
+
+EvalFunctions.penalty = function(binCol) {
+	var penalties = 0;
+	for (var i=0; i < binCol.bins.length; i++) {
+		var bin = binCol.bins[i];
+		if (bin.items.length > 0) {
+			penalties += bin.data.penalties[bin.data.gender];
+		}
+	}
+	return penalties;
 };
 
 SolutionCollection.prototype.add = function(binCollection) {
