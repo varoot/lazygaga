@@ -5,22 +5,22 @@
 		"bins": [
 			{
 				"name": "Sycamore 1",
-				"capacity": 4,
+				"capacity": 5,
 				"adjacent": ["Sycamore 2", "Sycamore 3", "Sycamore 4", "Sycamore Lower"]
 			},
 			{
 				"name": "Sycamore 2",
-				"capacity": 5,
+				"capacity": 6,
 				"adjacent": ["Sycamore 1", "Sycamore 3", "Sycamore 4", "Sycamore Lower"]
 			},
 			{
 				"name": "Sycamore 3",
-				"capacity": 5,
+				"capacity": 6,
 				"adjacent": ["Sycamore 1", "Sycamore 2", "Sycamore 4", "Sycamore Lower"]
 			},
 			{
 				"name": "Sycamore 4",
-				"capacity": 4,
+				"capacity": 5,
 				"adjacent": ["Sycamore 1", "Sycamore 2", "Sycamore 3", "Sycamore Lower"]
 			},
 			{
@@ -58,37 +58,6 @@
 			{
 				"name": "Hickory",
 				"adjacent": ["White Pine", "Maple"]
-			}
-		]
-	},
-	{
-		"group": "Cabins",
-		"capacity": 10,
-		"priority": 3,
-		"bins": [
-			{
-				"name": "Cabin 7",
-				"adjacent": ["Cabin 8"]
-			},
-			{
-				"name": "Cabin 8",
-				"adjacent": ["Cabin 7", "Cabin 9"]
-			},
-			{
-				"name": "Cabin 9",
-				"adjacent": ["Cabin 8", "Cabin 10"]
-			},
-			{
-				"name": "Cabin 10",
-				"adjacent": ["Cabin 9", "Cabin 11"]
-			},
-			{
-				"name": "Cabin 11",
-				"adjacent": ["Cabin 10", "Cabin 12"]
-			},
-			{
-				"name": "Cabin 12",
-				"adjacent": ["Cabin 11"]
 			}
 		]
 	}
